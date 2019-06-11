@@ -15,6 +15,6 @@ type KafkaProducerConfig struct {
 // KafkaConsumerConfig KafkaConsumerConfig
 type KafkaConsumerConfig struct {
 	KafkaGeneralConfig
-	Topic []uint16 `toml:"topics"`
-	Group string   `toml:"group"`
+	Topic []interface{} `toml:"topics"`
+	Group string        `toml:"group"`
 }
