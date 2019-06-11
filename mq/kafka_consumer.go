@@ -93,9 +93,9 @@ PROCESS_MSG:
 				err = consumer.stringFN(msg.Topic, string(msg.Key), msg.Value)
 			}
 			if err != nil {
-				consumer.log.Infow("process",
+				consumer.log.Errorw("process",
 					"topic", msg.Topic,
-					"subtype", msg.Key,
+					"subtype", string(msg.Key),
 					"mq_time", msg.Timestamp,
 					"data", string(msg.Value),
 					"err", err,
@@ -103,7 +103,7 @@ PROCESS_MSG:
 			} else {
 				consumer.log.Debugw("process",
 					"topic", msg.Topic,
-					"subtype", msg.Key,
+					"subtype", string(msg.Key),
 					"mq_time", msg.Timestamp,
 					"data", string(msg.Value),
 				)
