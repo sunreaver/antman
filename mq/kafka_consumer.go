@@ -81,11 +81,7 @@ PROCESS_MSG:
 			if consumer.intFN != nil {
 				t, st, e := consumer.getTypeAndSubtype(msg)
 				if e != nil {
-					consumer.log.Errorw("process",
-						"topic", t,
-						"subtype", st,
-						"err", e,
-					)
+					err = e
 				} else {
 					err = consumer.intFN(t, st, msg.Value)
 				}
@@ -95,7 +91,7 @@ PROCESS_MSG:
 			if err != nil {
 				consumer.log.Errorw("process",
 					"topic", msg.Topic,
-					"subtype", string(msg.Key),
+					"key", string(msg.Key),
 					"mq_time", msg.Timestamp,
 					"data", string(msg.Value),
 					"err", err,
@@ -103,7 +99,7 @@ PROCESS_MSG:
 			} else {
 				consumer.log.Debugw("process",
 					"topic", msg.Topic,
-					"subtype", string(msg.Key),
+					"key", string(msg.Key),
 					"mq_time", msg.Timestamp,
 					"data", string(msg.Value),
 				)
