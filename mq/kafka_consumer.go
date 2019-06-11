@@ -39,8 +39,6 @@ func MakeKafkaConsumer(c KafkaConsumerConfig) (Recver, error) {
 	}, nil
 }
 
-type recvFunc func(topic, key uint16, data []byte) error
-
 // KafkaConsumer represents a Sarama consumer group consumer
 type KafkaConsumer struct {
 	cfg            KafkaConsumerConfig
@@ -49,7 +47,8 @@ type KafkaConsumer struct {
 	ctx            context.Context
 	cancel         context.CancelFunc
 	client         sarama.ConsumerGroup
-	fn             recvFunc
+	intFN          RecvUIntTopicFunc
+	stringFN       RecvStringTopicFunc
 	log            logger.Logger
 }
 
@@ -78,31 +77,36 @@ PROCESS_MSG:
 			if !ok {
 				break PROCESS_MSG
 			}
-			t, st, e := consumer.getTypeAndSubtype(msg)
-			if e != nil {
-				consumer.log.Errorw("process",
-					"topic", t,
-					"subtype", st,
-					"err", e,
-				)
-			} else {
-				err := consumer.fn(t, st, msg.Value)
-				if err != nil {
-					consumer.log.Infow("process",
+			var err error
+			if consumer.intFN != nil {
+				t, st, e := consumer.getTypeAndSubtype(msg)
+				if e != nil {
+					consumer.log.Errorw("process",
 						"topic", t,
 						"subtype", st,
-						"mq_time", msg.Timestamp,
-						"data", string(msg.Value),
-						"err", err,
+						"err", e,
 					)
 				} else {
-					consumer.log.Debugw("process",
-						"topic", t,
-						"subtype", st,
-						"mq_time", msg.Timestamp,
-						"data", string(msg.Value),
-					)
+					err = consumer.intFN(t, st, msg.Value)
 				}
+			} else if consumer.stringFN != nil {
+				err = consumer.stringFN(msg.Topic, string(msg.Key), msg.Value)
+			}
+			if err != nil {
+				consumer.log.Infow("process",
+					"topic", msg.Topic,
+					"subtype", msg.Key,
+					"mq_time", msg.Timestamp,
+					"data", string(msg.Value),
+					"err", err,
+				)
+			} else {
+				consumer.log.Debugw("process",
+					"topic", msg.Topic,
+					"subtype", msg.Key,
+					"mq_time", msg.Timestamp,
+					"data", string(msg.Value),
+				)
 			}
 			session.MarkMessage(msg, "")
 		case <-consumer.ctx.Done():
@@ -114,8 +118,19 @@ PROCESS_MSG:
 }
 
 // SyncRecv SyncRecv
-func (consumer *KafkaConsumer) SyncRecv(fn recvFunc) error {
-	consumer.fn = fn
+func (consumer *KafkaConsumer) SyncRecv(fn RecvUIntTopicFunc) error {
+	consumer.intFN = fn
+	return consumer.startConsume()
+}
+
+// SyncRecv SyncRecv
+func (consumer *KafkaConsumer) SyncRecvStringTopic(fn RecvStringTopicFunc) error {
+	consumer.stringFN = fn
+	return consumer.startConsume()
+}
+
+// SyncRecv SyncRecv
+func (consumer *KafkaConsumer) startConsume() error {
 	errChan := make(chan error)
 	go func() {
 		for {
@@ -126,19 +141,18 @@ func (consumer *KafkaConsumer) SyncRecv(fn recvFunc) error {
 			}
 		}
 	}()
-	consumer.log.Infow("start_sync_recv", "cfg", consumer.cfg)
+	consumer.log.Infow("start_sync_recv",
+		"cfg", consumer.cfg,
+	)
 	defer consumer.client.Close()
-	select {
-	case err := <-errChan:
-		return err
-	}
+	err := <-errChan
+	return err
 }
 
 // Stop Stop
 func (consumer *KafkaConsumer) Stop() {
 	consumer.log.Infow("stop_sync_recv", "cfg", consumer.cfg)
 	consumer.cancel()
-	return
 }
 
 func (consumer *KafkaConsumer) getTypeAndSubtype(msg *sarama.ConsumerMessage) (uint16, uint16, error) {

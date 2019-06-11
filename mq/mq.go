@@ -4,6 +4,9 @@ import (
 	"github.com/sunreaver/logger"
 )
 
+type RecvUIntTopicFunc func(topic, key uint16, data []byte) error
+type RecvStringTopicFunc func(topic, key string, data []byte) error
+
 // Stoper Stoper
 type Stoper interface {
 	Stop()
@@ -18,12 +21,14 @@ type Logger interface {
 type Sender interface {
 	Stoper
 	Logger
-	SyncSend(uint16, uint16, string, []byte) error
+	SyncSend(topic uint16, key uint16, id string, data []byte) error
+	SyncSendWithStringTopic(topic, key, id string, data []byte) error
 }
 
 // Recver Recver
 type Recver interface {
 	Stoper
 	Logger
-	SyncRecv(recvFunc) error
+	SyncRecv(RecvUIntTopicFunc) error
+	SyncRecvStringTopic(RecvStringTopicFunc) error
 }

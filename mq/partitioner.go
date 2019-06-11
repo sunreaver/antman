@@ -1,8 +1,6 @@
 package mq
 
 import (
-	"fmt"
-
 	"github.com/Shopify/sarama"
 )
 
@@ -39,7 +37,6 @@ func (p *UIDPartitioner) Partition(message *sarama.ProducerMessage, numPartition
 	}
 
 	sum := UID2Index(uid)
-	fmt.Printf("topic: %v, key: %v, uid: %v, partitions: %v/%v\n", message.Topic, message.Key, uid, sum%numPartitions, numPartitions)
 	return sum % numPartitions, nil
 }
 
