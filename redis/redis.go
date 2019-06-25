@@ -14,8 +14,8 @@ type Redis struct {
 }
 
 // Key Key
-func (r *Redis) Key(id, bundle interface{}) string {
-	return fmt.Sprintf("%s%v:%v", r.cfg.Prefix, id, bundle)
+func (r *Redis) Key(id interface{}) string {
+	return fmt.Sprintf("%s%v", r.cfg.Prefix, id)
 }
 
 // Client Client
