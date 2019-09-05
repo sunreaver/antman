@@ -12,5 +12,5 @@ type Config struct {
 	WriteTimeout timesize.Duration `toml:"write_timeout"`
 	ReadTimeout  timesize.Duration `toml:"read_timeout"`
 	Poolsize     int               `toml:"poolsize"`
-	PoolTimeout  int               `toml:"pool_timeout"`
+	PoolTimeout  timesize.Duration `toml:"pool_timeout"`
 }
