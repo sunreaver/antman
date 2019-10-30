@@ -43,8 +43,15 @@ func InitCluster(cfg Config) error {
 
 // MakeClient MakeClient
 func MakeClient(cfg Config) (*Redis, error) {
-	tmp := r.NewClient(&r.Options{
-		Addr:         cfg.Hosts[0],
+	hosts := map[string]string{}
+	for _, v := range cfg.Hosts {
+		hosts[v] = v
+	}
+	if len(hosts) == 0 {
+		return nil, fmt.Errorf("no avliable hosts")
+	}
+	tmp := r.NewRing(&r.RingOptions{
+		Addrs:        hosts,
 		DialTimeout:  time.Duration(cfg.DialTimeout) * time.Millisecond,
 		WriteTimeout: time.Duration(cfg.WriteTimeout) * time.Millisecond,
 		ReadTimeout:  time.Duration(cfg.ReadTimeout) * time.Millisecond,
