@@ -1,6 +1,8 @@
 package mq
 
 import (
+	"hash/crc32"
+
 	"github.com/Shopify/sarama"
 )
 
@@ -74,4 +76,9 @@ func UID2IndexSDBMHash(uid string) int32 {
 		sum = v + (sum << 6) + (sum << 16) - sum
 	}
 	return (sum & 0x7FFFFFFF)
+}
+
+// UID2IndexCRC32 UID2IndexCRC32
+func UID2IndexCRC32(uid string) int32 {
+	return int32(crc32.ChecksumIEEE([]byte(uid)))
 }
