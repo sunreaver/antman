@@ -52,6 +52,7 @@ func MakeClient(cfg Config) (*Redis, error) {
 	}
 	tmp := r.NewRing(&r.RingOptions{
 		Addrs:        hosts,
+		Password:     cfg.Password,
 		DialTimeout:  time.Duration(cfg.DialTimeout) * time.Millisecond,
 		WriteTimeout: time.Duration(cfg.WriteTimeout) * time.Millisecond,
 		ReadTimeout:  time.Duration(cfg.ReadTimeout) * time.Millisecond,
@@ -71,6 +72,7 @@ func MakeClient(cfg Config) (*Redis, error) {
 func MakeCluster(cfg Config) (*Redis, error) {
 	tmp := r.NewClusterClient(&r.ClusterOptions{
 		Addrs:        cfg.Hosts,
+		Password:     cfg.Password,
 		DialTimeout:  time.Duration(cfg.DialTimeout) * time.Millisecond,
 		WriteTimeout: time.Duration(cfg.WriteTimeout) * time.Millisecond,
 		ReadTimeout:  time.Duration(cfg.ReadTimeout) * time.Millisecond,

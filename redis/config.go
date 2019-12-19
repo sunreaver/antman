@@ -7,6 +7,7 @@ import (
 // Config Config
 type Config struct {
 	Hosts        []string          `toml:"hosts"`
+	Password     string            `toml:"password"`
 	Prefix       string            `toml:"prefix"`
 	DialTimeout  timesize.Duration `toml:"dial_timeout"`
 	WriteTimeout timesize.Duration `toml:"write_timeout"`
