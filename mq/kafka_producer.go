@@ -12,8 +12,8 @@ var (
 	errServerDone = errors.New("server done")
 )
 
-// MakeKafkaProducer MakeKafkaProducer
-func MakeKafkaProducer(c KafkaProducerConfig) (Sender, error) {
+// MakeKafkaAsyncProducer MakeKafkaAsyncProducer
+func MakeKafkaAsyncProducer(c KafkaProducerConfig) (AsyncSender, error) {
 	cfg := sarama.NewConfig()
 	version, err := sarama.ParseKafkaVersion(c.Version)
 	if err != nil {
@@ -48,32 +48,18 @@ func (m *KafkaProducer) Stop() {
 }
 
 // SyncSend SyncSend
-func (m *KafkaProducer) SyncSend(t, st uint16, id string, body []byte) error {
-	select {
-	case m.kafka.Input() <- &sarama.ProducerMessage{
-		Topic: fmt.Sprintf("%s%v", m.cfg.TopicPrefix, t),
-		Key:   sarama.StringEncoder(fmt.Sprintf("%v", st)),
-		Value: sarama.ByteEncoder(body),
-		Metadata: map[string]string{
-			"uid": id,
-		},
-	}:
-	case err := <-m.kafka.Errors():
-		return fmt.Errorf("kafka err: %v", err)
-	case <-m.done:
-		return errServerDone
-	}
-	return nil
+func (m *KafkaProducer) AsyncSend(topic, key uint16, uid string, body []byte) error {
+	return m.AsyncSendWithStringTopic(fmt.Sprintf("%v", topic), fmt.Sprintf("%v", key), uid, body)
 }
 
-func (m *KafkaProducer) SyncSendWithStringTopic(topic, key, id string, data []byte) error {
+func (m *KafkaProducer) AsyncSendWithStringTopic(topic, key, uid string, data []byte) error {
 	select {
 	case m.kafka.Input() <- &sarama.ProducerMessage{
 		Topic: fmt.Sprintf("%s%v", m.cfg.TopicPrefix, topic),
 		Key:   sarama.StringEncoder(key),
 		Value: sarama.ByteEncoder(data),
 		Metadata: map[string]string{
-			"uid": id,
+			"uid": uid,
 		},
 	}:
 	case err := <-m.kafka.Errors():

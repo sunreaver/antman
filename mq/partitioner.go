@@ -60,7 +60,7 @@ func UID2Index(uid string) int32 {
 			// 最多只取10位
 			break
 		}
-		sum += int32(v)
+		sum += v
 	}
 	return (sum & 0x7FFFFFFF)
 }

@@ -4,7 +4,6 @@ import "testing"
 
 func BenchmarkUID2Index(b *testing.B) {
 	str := "abcdefghijklmn"
-
 	b.ResetTimer()
 
 	for index := 0; index < b.N; index++ {

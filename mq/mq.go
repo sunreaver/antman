@@ -17,11 +17,17 @@ type Logger interface {
 	SetLogger(logger.Logger)
 }
 
-// Sender Sender
-type Sender interface {
+type AsyncSender interface {
 	Stoper
 	Logger
-	SyncSend(topic uint16, key uint16, id string, data []byte) error
+	AsyncSend(topic, key uint16, id string, data []byte) error
+	AsyncSendWithStringTopic(topic, key, id string, data []byte) error
+}
+
+type SyncSender interface {
+	Stoper
+	Logger
+	SyncSend(topic, key uint16, id string, data []byte) error
 	SyncSendWithStringTopic(topic, key, id string, data []byte) error
 }
 
