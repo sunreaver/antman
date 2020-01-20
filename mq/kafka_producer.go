@@ -26,7 +26,7 @@ func MakeKafkaAsyncProducer(c KafkaProducerConfig) (AsyncSender, error) {
 		return nil, fmt.Errorf("new async producer err: %v[hosts: %v]", e, c.Hosts)
 	}
 
-	return &KafkaProducer{
+	return &KafkaAsyncProducer{
 		kafka: kafka,
 		cfg:   c,
 		done:  make(chan bool),
@@ -34,8 +34,8 @@ func MakeKafkaAsyncProducer(c KafkaProducerConfig) (AsyncSender, error) {
 	}, nil
 }
 
-// KafkaProducer KafkaProducer
-type KafkaProducer struct {
+// KafkaAsyncProducer KafkaAsyncProducer
+type KafkaAsyncProducer struct {
 	kafka sarama.AsyncProducer
 	cfg   KafkaProducerConfig
 	done  chan bool
@@ -43,16 +43,16 @@ type KafkaProducer struct {
 }
 
 // Stop Stop
-func (m *KafkaProducer) Stop() {
+func (m *KafkaAsyncProducer) Stop() {
 	close(m.done)
 }
 
 // SyncSend SyncSend
-func (m *KafkaProducer) AsyncSend(topic, key uint16, uid string, body []byte) error {
+func (m *KafkaAsyncProducer) AsyncSend(topic, key uint16, uid string, body []byte) error {
 	return m.AsyncSendWithStringTopic(fmt.Sprintf("%v", topic), fmt.Sprintf("%v", key), uid, body)
 }
 
-func (m *KafkaProducer) AsyncSendWithStringTopic(topic, key, uid string, data []byte) error {
+func (m *KafkaAsyncProducer) AsyncSendWithStringTopic(topic, key, uid string, data []byte) error {
 	select {
 	case m.kafka.Input() <- &sarama.ProducerMessage{
 		Topic: fmt.Sprintf("%s%v", m.cfg.TopicPrefix, topic),
@@ -71,6 +71,6 @@ func (m *KafkaProducer) AsyncSendWithStringTopic(topic, key, uid string, data []
 }
 
 // SetLogger SetLogger
-func (m *KafkaProducer) SetLogger(l logger.Logger) {
+func (m *KafkaAsyncProducer) SetLogger(l logger.Logger) {
 	m.log = l
 }
