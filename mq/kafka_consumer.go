@@ -113,13 +113,13 @@ PROCESS_MSG:
 	return nil
 }
 
-// SyncRecv SyncRecv
-func (consumer *KafkaConsumer) SyncRecv(fn RecvUIntTopicFunc) error {
+// SyncRecvUintTopic SyncRecvUintTopic
+func (consumer *KafkaConsumer) SyncRecvUintTopic(fn RecvUIntTopicFunc) error {
 	consumer.intFN = fn
 	return consumer.startConsume()
 }
 
-// SyncRecv SyncRecv
+// SyncRecvStringTopic SyncRecvStringTopic
 func (consumer *KafkaConsumer) SyncRecvStringTopic(fn RecvStringTopicFunc) error {
 	consumer.stringFN = fn
 	return consumer.startConsume()

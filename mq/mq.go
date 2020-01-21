@@ -35,6 +35,6 @@ type SyncSender interface {
 type Recver interface {
 	Stoper
 	Logger
-	SyncRecv(RecvUIntTopicFunc) error
+	SyncRecvUintTopic(RecvUIntTopicFunc) error
 	SyncRecvStringTopic(RecvStringTopicFunc) error
 }
