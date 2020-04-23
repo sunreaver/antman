@@ -136,17 +136,19 @@ func (consumer *KafkaConsumer) startConsume() error {
 	errChan := make(chan error)
 	go func() {
 		for {
-			if err := consumer.client.Consume(consumer.ctx, consumer.topics, consumer); err != nil {
-				consumer.log.Warnw("consume",
-					"err", err,
-				)
-				time.Sleep(10 * time.Second)
-			}
+			err := consumer.client.Consume(consumer.ctx, consumer.topics, consumer)
 			if consumer.ctx.Err() != nil {
 				errChan <- consumer.ctx.Err()
 				return
 			}
 			consumer.ready = make(chan bool)
+
+			if err != nil {
+				consumer.log.Warnw("consume",
+					"err", err,
+				)
+				time.Sleep(10 * time.Second)
+			}
 		}
 	}()
 	<-consumer.ready
