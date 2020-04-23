@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"strconv"
 	"strings"
+	"time"
 
 	"github.com/Shopify/sarama"
 	"github.com/sunreaver/logger"
@@ -139,6 +140,7 @@ func (consumer *KafkaConsumer) startConsume() error {
 				consumer.log.Warnw("consume",
 					"err", err,
 				)
+				time.Sleep(10 * time.Second)
 			}
 			if consumer.ctx.Err() != nil {
 				errChan <- consumer.ctx.Err()
