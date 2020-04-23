@@ -18,6 +18,7 @@ func MakeKafkaConsumer(c KafkaConsumerConfig) (Recver, error) {
 		return nil, fmt.Errorf("parse version err: %v", err)
 	}
 	cfg.Version = v
+	cfg.Consumer.Group.Rebalance.Strategy = sarama.BalanceStrategyRoundRobin
 
 	client, err := sarama.NewConsumerGroup(c.Hosts, c.Group, cfg)
 	if err != nil {

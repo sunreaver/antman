@@ -38,7 +38,7 @@ func (p *UIDPartitioner) Partition(message *sarama.ProducerMessage, numPartition
 		return random.Partition(message, numPartitions)
 	}
 
-	sum := UID2Index(uid)
+	sum := UID2IndexSDBMHash(uid)
 	return sum % numPartitions, nil
 }
 
@@ -55,11 +55,11 @@ func (p *UIDPartitioner) MessageRequiresConsistency(message *sarama.ProducerMess
 // UID2Index UID2Index
 func UID2Index(uid string) int32 {
 	var sum int32
-	for index, v := range uid {
-		if index > 10 {
-			// 最多只取10位
-			break
-		}
+	for _, v := range uid {
+		// if index > 20 {
+		// 	// 最多只取10位
+		// 	break
+		// }
 		sum += v
 	}
 	return (sum & 0x7FFFFFFF)
@@ -68,11 +68,11 @@ func UID2Index(uid string) int32 {
 // UID2IndexSDBMHash UID2IndexSDBMHash
 func UID2IndexSDBMHash(uid string) int32 {
 	var sum int32
-	for index, v := range uid {
-		if index > 10 {
-			// 最多只取10位
-			break
-		}
+	for _, v := range uid {
+		// if index > 20 {
+		// 	// 最多只取10位
+		// 	break
+		// }
 		sum = v + (sum << 6) + (sum << 16) - sum
 	}
 	return (sum & 0x7FFFFFFF)
