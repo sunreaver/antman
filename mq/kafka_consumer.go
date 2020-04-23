@@ -3,7 +3,6 @@ package mq
 import (
 	"context"
 	"fmt"
-	"log"
 	"strconv"
 	"strings"
 
@@ -136,7 +135,9 @@ func (consumer *KafkaConsumer) startConsume() error {
 	go func() {
 		for {
 			if err := consumer.client.Consume(consumer.ctx, consumer.topics, consumer); err != nil {
-				log.Println("consumer err:", err.Error())
+				consumer.log.Warnw("consume",
+					"err", err,
+				)
 			}
 			if consumer.ctx.Err() != nil {
 				errChan <- consumer.ctx.Err()
@@ -151,6 +152,10 @@ func (consumer *KafkaConsumer) startConsume() error {
 	)
 	defer consumer.client.Close()
 	err := <-errChan
+	consumer.log.Infow("stop_sync_recv",
+		"cfg", consumer.cfg,
+		"err", err,
+	)
 	return err
 }
 
