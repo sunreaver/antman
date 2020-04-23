@@ -1,9 +1,9 @@
 module github.com/sunreaver/antman
 
-go 1.12
+go 1.14
 
 require (
-	github.com/Shopify/sarama v1.23.1
+	github.com/Shopify/sarama v1.26.1
 	github.com/go-redis/redis v6.15.5+incompatible
 	github.com/jinzhu/gorm v1.9.10
 	github.com/sunreaver/logger v1.0.0

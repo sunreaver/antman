@@ -3,6 +3,7 @@ package mq
 import (
 	"context"
 	"fmt"
+	"log"
 	"strconv"
 	"strings"
 
@@ -36,6 +37,7 @@ func MakeKafkaConsumer(c KafkaConsumerConfig) (Recver, error) {
 		ctx:            ctx,
 		cancel:         cancel,
 		log:            logger.Empty,
+		ready:          make(chan bool),
 	}, nil
 }
 
@@ -50,11 +52,14 @@ type KafkaConsumer struct {
 	intFN          RecvUIntTopicFunc
 	stringFN       RecvStringTopicFunc
 	log            logger.Logger
+
+	ready chan bool
 }
 
 // Setup is run at the beginning of a new session, before ConsumeClaim
 func (consumer *KafkaConsumer) Setup(sarama.ConsumerGroupSession) error {
 	// Mark the consumer as ready
+	close(consumer.ready)
 	return nil
 }
 
@@ -130,13 +135,17 @@ func (consumer *KafkaConsumer) startConsume() error {
 	errChan := make(chan error)
 	go func() {
 		for {
-			err := consumer.client.Consume(consumer.ctx, consumer.topics, consumer)
-			if err != nil {
-				errChan <- err
+			if err := consumer.client.Consume(consumer.ctx, consumer.topics, consumer); err != nil {
+				log.Println("consumer err:", err.Error())
+			}
+			if consumer.ctx.Err() != nil {
+				errChan <- consumer.ctx.Err()
 				return
 			}
+			consumer.ready = make(chan bool)
 		}
 	}()
+	<-consumer.ready
 	consumer.log.Infow("start_sync_recv",
 		"cfg", consumer.cfg,
 	)
