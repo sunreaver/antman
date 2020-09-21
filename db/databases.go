@@ -3,7 +3,7 @@ package db
 import (
 	"sync/atomic"
 
-	"github.com/jinzhu/gorm"
+	"gorm.io/gorm"
 )
 
 type Databases struct {
@@ -15,14 +15,21 @@ type Databases struct {
 
 func (db *Databases) Free() {
 	if db.master != nil {
-		db.master.Close()
+		master, e := db.master.DB()
+		if e == nil {
+			master.Close()
+		}
 	}
+	db.master = nil
 	slaves := db.slaves
 	db.slaveCount = 0
 	db.slaveIndex = 0
 	db.slaves = nil
 	for _, s := range slaves {
-		s.Close()
+		slave, e := s.DB()
+		if e == nil {
+			slave.Close()
+		}
 	}
 }
 
@@ -36,5 +43,6 @@ func (db *Databases) Slave() *gorm.DB {
 	}
 	index := atomic.AddUint32(&db.slaveIndex, 1)
 	index %= db.slaveCount
+
 	return db.slaves[index]
 }

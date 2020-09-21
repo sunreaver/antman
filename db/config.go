@@ -1,6 +1,6 @@
 package db
 
-// Config Config
+// Config Config.
 type Config struct {
 	Type         string   `toml:"type"`
 	MasterURI    string   `toml:"master_uri"`
