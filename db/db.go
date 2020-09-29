@@ -52,9 +52,9 @@ func makeClient(dbType string, uri string, maxIdle, maxOpen int, logMode bool, g
 	}
 	var loggerMode logger.Interface
 	if logMode {
-		loggerMode = logger.Default.LogMode(logger.Silent)
+		loggerMode = logger.Default.LogMode(logger.Info)
 	} else {
-		loggerMode = logger.Default
+		loggerMode = logger.Default.LogMode(logger.Silent)
 	}
 	if gormConfig == nil {
 		gormConfig = &gorm.Config{

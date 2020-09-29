@@ -8,8 +8,9 @@ import (
 	"path"
 	"testing"
 
-	. "github.com/sunreaver/antman/db"
+	. "github.com/sunreaver/antman/v2/db"
 	"gorm.io/gorm"
+	"gorm.io/gorm/schema"
 )
 
 type TempTable struct {
@@ -36,7 +37,38 @@ func (t *TestJSON) Value() (driver.Value, error) {
 
 // Scan 实现方法.
 func (t *TestJSON) Scan(input interface{}) error {
-	return json.Unmarshal(input.([]byte), t)
+	bytes, ok := input.([]byte)
+	if !ok {
+		return fmt.Errorf("input is not []byte: %v", input)
+	}
+
+	result := TestJSON{}
+	err := json.Unmarshal(bytes, &result)
+	if err != nil {
+		return err
+	}
+	*t = result
+
+	return nil
+}
+
+func (t *TestJSON) GormDataType() string {
+	return "json"
+}
+
+func (t *TestJSON) GormDBDataType(db *gorm.DB, field *schema.Field) string {
+	// use field.Tag, field.TagSettings gets field's tags
+	// checkout https://github.com/go-gorm/gorm/blob/master/schema/field.go for all options
+
+	// returns different database type based on driver name
+	switch db.Dialector.Name() {
+	case "mysql", "sqlite":
+		return "JSON"
+	case "postgres":
+		return "JSONB"
+	}
+
+	return ""
 }
 
 var dbTest *Databases
@@ -51,13 +83,11 @@ func TestMain(m *testing.M) {
 			dbFile,
 			dbFile,
 		},
-		LogMode:      true,
+		LogMode:      false,
 		MaxIdleConns: 1,
 		MaxOpenConns: 10,
 	}
-	tmp, e := MakeDB(cfg, &gorm.Config{
-		Logger: nil,
-	})
+	tmp, e := MakeDB(cfg, nil)
 	if e != nil {
 		fmt.Println("make db err:", e)
 		os.Exit(1)
