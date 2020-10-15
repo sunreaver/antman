@@ -1,52 +1,41 @@
 package db
 
 import (
+	"time"
+
 	"github.com/pkg/errors"
 	"gorm.io/driver/mysql"
 	"gorm.io/driver/postgres"
 	"gorm.io/driver/sqlite"
 	"gorm.io/gorm"
 	"gorm.io/gorm/logger"
+	"gorm.io/plugin/dbresolver"
 )
 
 // 创建DB.
 func MakeDB(c Config, gormConfig *gorm.Config) (db *Databases, err error) {
-	dbMaster, e := makeClient(c.Type, c.MasterURI, c.MaxIdleConns, c.MaxOpenConns, c.LogMode, gormConfig)
+	dbMaster, e := makeClient(c.Type, c.MasterURI, c.MaxIdleConns, c.MaxOpenConns, c.LogMode, gormConfig, c.SlaveURIs...)
 	if e != nil {
-		return nil, errors.Wrap(e, "master")
+		return nil, errors.Wrap(e, "make db")
 	}
 
 	db = &Databases{
 		master: dbMaster,
-		slaves: []*gorm.DB{},
-	}
-
-	defer func() {
-		if err != nil {
-			db.Free()
-		}
-	}()
-
-	for _, uri := range c.SlaveURIs {
-		dbSlave, e := makeClient(c.Type, uri, c.MaxIdleConns, c.MaxOpenConns, c.LogMode, gormConfig)
-		if e != nil {
-			return nil, e
-		}
-		db.slaves = append(db.slaves, dbSlave)
-		db.slaveCount++
 	}
 
 	return db, nil
 }
 
-func makeClient(dbType string, uri string, maxIdle, maxOpen int, logMode bool, gormConfig *gorm.Config) (*gorm.DB, error) {
-	var dialector gorm.Dialector
+type dialector func(dsn string) gorm.Dialector
+
+func makeClient(dbType string, master string, maxIdle, maxOpen int, logMode bool, gormConfig *gorm.Config, slaves ...string) (*gorm.DB, error) {
+	var dt dialector
 	if dbType == "mysql" {
-		dialector = mysql.Open(uri)
+		dt = mysql.Open
 	} else if dbType == "sqlite" {
-		dialector = sqlite.Open(uri)
+		dt = sqlite.Open
 	} else if dbType == "postgres" {
-		dialector = postgres.Open(uri)
+		dt = postgres.Open
 	} else {
 		return nil, errors.Errorf("no support db type: %v", dbType)
 	}
@@ -63,16 +52,28 @@ func makeClient(dbType string, uri string, maxIdle, maxOpen int, logMode bool, g
 	} else if gormConfig.Logger == nil {
 		gormConfig.Logger = loggerMode
 	}
-	tmp, e := gorm.Open(dialector, gormConfig)
+	tmp, e := gorm.Open(dt(master), gormConfig)
 	if e != nil {
 		return nil, e
 	}
-	dbTmp, e := tmp.DB()
-	if e != nil {
-		return nil, errors.Wrap(e, "master")
+
+	// 组成slave
+	ss := make([]gorm.Dialector, len(slaves))
+	for index, s := range slaves {
+		ss[index] = dt(s)
 	}
-	dbTmp.SetMaxIdleConns(maxIdle)
-	dbTmp.SetMaxOpenConns(maxOpen)
+
+	e = tmp.Use(dbresolver.Register(dbresolver.Config{
+		Replicas: ss,
+		Policy:   dbresolver.RandomPolicy{},
+	}).SetConnMaxIdleTime(time.Minute * 5).
+		SetConnMaxLifetime(time.Hour * 24).
+		SetMaxIdleConns(maxIdle).
+		SetMaxOpenConns(maxOpen))
+
+	if e != nil {
+		return nil, errors.Wrap(e, "set dbresolver")
+	}
 
 	return tmp, nil
 }
