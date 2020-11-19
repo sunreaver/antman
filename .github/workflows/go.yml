@@ -35,5 +35,4 @@ jobs:
       - name: Run golangci-lint
         uses: actions-contrib/golangci-lint@v1
         with:
-          config: .golangci.yml
-          args: run ./...
+          args: run --config=.golangci.yml ./...
