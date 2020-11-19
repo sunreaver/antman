@@ -83,7 +83,7 @@ run:
   skip-dirs:
     - ".*_test"
   skip_files:
-    - ".*_test.go$"
+    - ".*_test\\.go$"
 
 # golangci.com configuration
 # https://github.com/golangci/golangci/wiki/Configuration
