@@ -77,9 +77,13 @@ linters:
     - funlen
     - gomnd 
     - gosec
+  fast: true
 run:
+  skip-dirs-use-default: true
   skip-dirs:
-    - vendor
+    - ".*_test"
+  skip_files:
+    - ".*_test.go$"
 
 # golangci.com configuration
 # https://github.com/golangci/golangci/wiki/Configuration
