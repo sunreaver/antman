@@ -54,7 +54,7 @@ func makeClient(dbType string, master string, maxIdle, maxOpen int, logMode bool
 	}
 	tmp, e := gorm.Open(dt(master), gormConfig)
 	if e != nil {
-		return nil, e
+		return nil, errors.Wrap(e, "gorm open")
 	}
 
 	// 组成slave

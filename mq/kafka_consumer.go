@@ -8,6 +8,7 @@ import (
 	"time"
 
 	"github.com/Shopify/sarama"
+	"github.com/pkg/errors"
 	"github.com/sunreaver/logger"
 )
 
@@ -16,14 +17,14 @@ func MakeKafkaConsumer(c KafkaConsumerConfig) (Recver, error) {
 	cfg := sarama.NewConfig()
 	v, err := sarama.ParseKafkaVersion(c.Version)
 	if err != nil {
-		return nil, fmt.Errorf("parse version err: %v", err)
+		return nil, errors.Wrap(err, "parse version")
 	}
 	cfg.Version = v
 	cfg.Consumer.Group.Rebalance.Strategy = sarama.BalanceStrategyRoundRobin
 
 	client, err := sarama.NewConsumerGroup(c.Hosts, c.Group, cfg)
 	if err != nil {
-		return nil, fmt.Errorf("new consumer err: %v", err)
+		return nil, errors.Wrap(err, "new consumer")
 	}
 	topics := make([]string, len(c.Topic))
 	for index, v := range c.Topic {
@@ -172,15 +173,15 @@ func (consumer *KafkaConsumer) Stop() {
 
 func (consumer *KafkaConsumer) getTypeAndSubtype(msg *sarama.ConsumerMessage) (uint16, uint16, error) {
 	if !strings.HasPrefix(msg.Topic, consumer.cfg.TopicPrefix) {
-		return 0, 0, fmt.Errorf("unsupport kafka topic: %v", msg.Topic)
+		return 0, 0, errors.Errorf("unsupport kafka topic: %v", msg.Topic)
 	}
 	t, e := strconv.Atoi(msg.Topic[consumer.topicPrefixLen:])
 	if e != nil {
-		return 0, 0, fmt.Errorf("topic err: %v", e)
+		return 0, 0, errors.Wrap(e, "topic")
 	}
 	st, e := strconv.Atoi(string(msg.Key))
 	if e != nil {
-		return 0, 0, fmt.Errorf("st err: %v", e)
+		return 0, 0, errors.Wrap(e, "strconv.atoi")
 	}
 	return uint16(t), uint16(st), nil
 }

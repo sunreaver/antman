@@ -1,10 +1,9 @@
 package mq
 
-import (
-	"github.com/sunreaver/logger"
-)
+import "github.com/sunreaver/logger"
 
 type RecvUIntTopicFunc func(topic, key uint16, data []byte) error
+
 type RecvStringTopicFunc func(topic, key string, data []byte) error
 
 // Stoper Stoper

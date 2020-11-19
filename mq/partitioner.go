@@ -6,6 +6,8 @@ import (
 	"github.com/Shopify/sarama"
 )
 
+var random = sarama.NewRandomPartitioner("")
+
 // UIDPartitioner UIDPartitioner
 type UIDPartitioner struct {
 	topic string
@@ -17,10 +19,6 @@ func NewUIDPartitioner(topic string) sarama.Partitioner {
 		topic: topic,
 	}
 }
-
-var (
-	random = sarama.NewRandomPartitioner("")
-)
 
 func getMetaDataWithTag(message *sarama.ProducerMessage, tag string) (string, bool) {
 	meta, ok := message.Metadata.(map[string]string)
