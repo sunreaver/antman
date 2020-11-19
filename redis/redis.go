@@ -5,6 +5,7 @@ import (
 	"time"
 
 	r "github.com/go-redis/redis"
+	"github.com/pkg/errors"
 )
 
 // Redis Redis
@@ -48,7 +49,7 @@ func MakeClient(cfg Config) (*Redis, error) {
 		hosts[v] = v
 	}
 	if len(hosts) == 0 {
-		return nil, fmt.Errorf("no avliable hosts")
+		return nil, errors.New("no avliable hosts")
 	}
 	tmp := r.NewRing(&r.RingOptions{
 		Addrs:        hosts,
@@ -60,7 +61,7 @@ func MakeClient(cfg Config) (*Redis, error) {
 		PoolTimeout:  time.Duration(cfg.PoolTimeout) * time.Second,
 	})
 	if e := tmp.Ping().Err(); e != nil {
-		return nil, e
+		return nil, errors.Wrap(e, "ping")
 	}
 	return &Redis{
 		UniversalClient: tmp,
@@ -80,13 +81,12 @@ func MakeCluster(cfg Config) (*Redis, error) {
 		PoolTimeout:  time.Duration(cfg.PoolTimeout) * time.Second,
 	})
 	if e := tmp.Ping().Err(); e != nil {
-		return nil, e
+		return nil, errors.Wrap(e, "ping")
 	}
 	return &Redis{
 		UniversalClient: tmp,
 		cfg:             cfg,
 	}, nil
-
 }
 
 // Stop 停止redis连接
