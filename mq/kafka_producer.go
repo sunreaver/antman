@@ -23,11 +23,23 @@ func MakeKafkaAsyncProducer(c KafkaProducerConfig) (AsyncSender, error) {
 	if e != nil {
 		return nil, errors.Wrapf(e, "new async producer [hosts: %v]", c.Hosts)
 	}
+	done := make(chan bool)
+
+	go func() {
+		for {
+			select {
+			case <-done:
+				return
+			case e := <-kafka.Errors():
+				fmt.Println("[sarama] kafka producer err:", e.Error())
+			}
+		}
+	}()
 
 	return &KafkaAsyncProducer{
 		kafka: kafka,
 		cfg:   c,
-		done:  make(chan bool),
+		done:  done,
 		log:   logger.Empty,
 	}, nil
 }
@@ -60,8 +72,6 @@ func (m *KafkaAsyncProducer) AsyncSendWithStringTopic(topic, key, uid string, da
 			"uid": uid,
 		},
 	}:
-	case err := <-m.kafka.Errors():
-		return errors.Wrap(err, "async send")
 	case <-m.done:
 		return errors.Wrap(errServerDone, "async done")
 	}
