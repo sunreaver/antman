@@ -1,35 +1,45 @@
 package mq
 
 import (
-	"errors"
 	"fmt"
 
 	"github.com/Shopify/sarama"
+	"github.com/pkg/errors"
 	"github.com/sunreaver/logger"
 )
 
-var (
-	errServerDone = errors.New("server done")
-)
+var errServerDone = errors.New("server done")
 
 // MakeKafkaAsyncProducer MakeKafkaAsyncProducer
 func MakeKafkaAsyncProducer(c KafkaProducerConfig) (AsyncSender, error) {
 	cfg := sarama.NewConfig()
 	version, err := sarama.ParseKafkaVersion(c.Version)
 	if err != nil {
-		return nil, fmt.Errorf("parse version err: %v", err)
+		return nil, errors.Wrap(err, "parse version")
 	}
 	cfg.Version = version
 	cfg.Producer.Partitioner = NewUIDPartitioner
 	kafka, e := sarama.NewAsyncProducer(c.Hosts, cfg)
 	if e != nil {
-		return nil, fmt.Errorf("new async producer err: %v[hosts: %v]", e, c.Hosts)
+		return nil, errors.Wrapf(e, "new async producer [hosts: %v]", c.Hosts)
 	}
+	done := make(chan bool)
+
+	go func() {
+		for {
+			select {
+			case <-done:
+				return
+			case e := <-kafka.Errors():
+				fmt.Println("[sarama] kafka producer err:", e.Error())
+			}
+		}
+	}()
 
 	return &KafkaAsyncProducer{
 		kafka: kafka,
 		cfg:   c,
-		done:  make(chan bool),
+		done:  done,
 		log:   logger.Empty,
 	}, nil
 }
@@ -62,10 +72,8 @@ func (m *KafkaAsyncProducer) AsyncSendWithStringTopic(topic, key, uid string, da
 			"uid": uid,
 		},
 	}:
-	case err := <-m.kafka.Errors():
-		return fmt.Errorf("kafka err: %v", err)
 	case <-m.done:
-		return errServerDone
+		return errors.Wrap(errServerDone, "async done")
 	}
 	return nil
 }
