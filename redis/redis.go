@@ -59,6 +59,7 @@ func MakeClient(cfg Config) (*Redis, error) {
 		ReadTimeout:  time.Duration(cfg.ReadTimeout) * time.Millisecond,
 		PoolSize:     cfg.Poolsize,
 		PoolTimeout:  time.Duration(cfg.PoolTimeout) * time.Second,
+		DB:           cfg.DB,
 	})
 	if e := tmp.Ping().Err(); e != nil {
 		return nil, errors.Wrap(e, "ping")

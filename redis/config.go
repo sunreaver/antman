@@ -14,4 +14,5 @@ type Config struct {
 	ReadTimeout  timesize.Duration `toml:"read_timeout"`
 	Poolsize     int               `toml:"poolsize"`
 	PoolTimeout  timesize.Duration `toml:"pool_timeout"`
+	DB           int               `toml:"db"`
 }
