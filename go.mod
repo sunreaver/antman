@@ -4,6 +4,7 @@ go 1.14
 
 require (
 	github.com/Shopify/sarama v1.27.2
+	github.com/cengsin/oracle v1.0.0
 	github.com/go-redis/redis v6.15.9+incompatible
 	github.com/golang/snappy v0.0.2 // indirect
 	github.com/jackc/pgx/v4 v4.9.2 // indirect
