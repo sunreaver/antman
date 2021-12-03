@@ -69,8 +69,8 @@ func makeClient(dbType string, master string, maxIdle, maxOpen int, logMode bool
 	e = tmp.Use(dbresolver.Register(dbresolver.Config{
 		Replicas: ss,
 		Policy:   dbresolver.RandomPolicy{},
-	}).SetConnMaxIdleTime(time.Minute * 5).
-		SetConnMaxLifetime(time.Hour * 24).
+	}).SetConnMaxIdleTime(time.Second * 5).
+		SetConnMaxLifetime(time.Second * 20).
 		SetMaxIdleConns(maxIdle).
 		SetMaxOpenConns(maxOpen))
 
