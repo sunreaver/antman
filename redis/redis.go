@@ -1,10 +1,11 @@
 package redis
 
 import (
+	"context"
 	"fmt"
 	"time"
 
-	r "github.com/go-redis/redis"
+	r "github.com/go-redis/redis/v8"
 	"github.com/pkg/errors"
 )
 
@@ -61,7 +62,7 @@ func MakeClient(cfg Config) (*Redis, error) {
 		PoolTimeout:  time.Duration(cfg.PoolTimeout) * time.Second,
 		DB:           cfg.DB,
 	})
-	if e := tmp.Ping().Err(); e != nil {
+	if e := tmp.Ping(context.TODO()).Err(); e != nil {
 		return nil, errors.Wrap(e, "ping")
 	}
 	return &Redis{
@@ -81,7 +82,7 @@ func MakeCluster(cfg Config) (*Redis, error) {
 		PoolSize:     cfg.Poolsize,
 		PoolTimeout:  time.Duration(cfg.PoolTimeout) * time.Second,
 	})
-	if e := tmp.Ping().Err(); e != nil {
+	if e := tmp.Ping(context.TODO()).Err(); e != nil {
 		return nil, errors.Wrap(e, "ping")
 	}
 	return &Redis{
