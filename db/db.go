@@ -29,6 +29,14 @@ func MakeDB(c Config, gormConfig *gorm.Config) (db *Databases, err error) {
 
 type dialector func(dsn string) gorm.Dialector
 
+// mogdb的dialector
+func mogDialector(dsn string) gorm.Dialector {
+	return postgres.New(postgres.Config{
+		DriverName: "opengauss",
+		DSN:        dsn,
+	})
+}
+
 func makeClient(dbType string, master string, maxIdle, maxOpen int, logMode bool, gormConfig *gorm.Config, slaves ...string) (*gorm.DB, error) {
 	var dt dialector
 	if dbType == "mysql" {
@@ -39,6 +47,8 @@ func makeClient(dbType string, master string, maxIdle, maxOpen int, logMode bool
 		dt = postgres.Open
 	} else if dbType == "oracle" {
 		dt = oracle.Open
+	} else if dbType == "mogdb" {
+		dt = mogDialector
 	} else {
 		return nil, errors.Errorf("no support db type: %v", dbType)
 	}
