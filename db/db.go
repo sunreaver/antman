@@ -3,7 +3,7 @@ package db
 import (
 	"time"
 
-	"github.com/cengsin/oracle"
+	"github.com/dzwvip/oracle"
 	"github.com/pkg/errors"
 	"gorm.io/driver/mysql"
 	"gorm.io/driver/postgres"
