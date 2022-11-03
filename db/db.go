@@ -3,7 +3,7 @@ package db
 import (
 	"time"
 
-	"github.com/cengsin/oracle"
+	"github.com/dzwvip/oracle"
 	"github.com/pkg/errors"
 	"gorm.io/driver/mysql"
 	"gorm.io/driver/postgres"
@@ -29,7 +29,7 @@ func MakeDB(c Config, gormConfig *gorm.Config) (db *Databases, err error) {
 
 type dialector func(dsn string) gorm.Dialector
 
-//mogdb的dialector
+// mogdb的dialector
 func mogDialector(dsn string) gorm.Dialector {
 	return postgres.New(postgres.Config{
 		DriverName: "opengauss",
