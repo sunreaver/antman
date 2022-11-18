@@ -3,6 +3,7 @@ module github.com/sunreaver/antman/v2
 go 1.18
 
 require (
+	gitee.com/opengauss/openGauss-connector-go-pq v1.0.4
 	github.com/Shopify/sarama v1.27.2
 	github.com/cengsin/oracle v1.0.0
 	github.com/go-redis/redis/v8 v8.11.5
@@ -46,10 +47,11 @@ require (
 	github.com/pierrec/lz4 v2.6.0+incompatible // indirect
 	github.com/rcrowley/go-metrics v0.0.0-20200313005456-10cdbea86bc0 // indirect
 	github.com/thoas/go-funk v0.7.0 // indirect
+	github.com/tjfoc/gmsm v1.4.1 // indirect
 	go.uber.org/atomic v1.6.0 // indirect
 	go.uber.org/multierr v1.5.0 // indirect
 	go.uber.org/zap v1.16.0 // indirect
-	golang.org/x/crypto v0.0.0-20201117144127-c1f2f97bffc9 // indirect
+	golang.org/x/crypto v0.0.0-20210711020723-a769d52b0f97 // indirect
 	golang.org/x/net v0.0.0-20210428140749-89ef3d95e781 // indirect
 	golang.org/x/sync v0.0.0-20201020160332-67f06af15bc9 // indirect
 	golang.org/x/text v0.3.6 // indirect

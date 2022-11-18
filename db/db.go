@@ -3,6 +3,7 @@ package db
 import (
 	"time"
 
+	_ "gitee.com/opengauss/openGauss-connector-go-pq"
 	"github.com/cengsin/oracle"
 	"github.com/pkg/errors"
 	"gorm.io/driver/mysql"
