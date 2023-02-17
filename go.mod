@@ -3,9 +3,7 @@ module github.com/sunreaver/antman/v2
 go 1.18
 
 require (
-	gitee.com/opengauss/openGauss-connector-go-pq v1.0.4
 	github.com/Shopify/sarama v1.27.2
-	github.com/cengsin/oracle v1.0.0
 	github.com/go-redis/redis/v8 v8.11.5
 	github.com/pkg/errors v0.9.1
 	github.com/sunreaver/logger v1.0.3
@@ -24,10 +22,7 @@ require (
 	github.com/eapache/go-resiliency v1.2.0 // indirect
 	github.com/eapache/go-xerial-snappy v0.0.0-20180814174437-776d5712da21 // indirect
 	github.com/eapache/queue v1.1.0 // indirect
-	github.com/emirpasic/gods v1.12.0 // indirect
-	github.com/go-logfmt/logfmt v0.5.0 // indirect
 	github.com/go-sql-driver/mysql v1.5.0 // indirect
-	github.com/godror/godror v0.20.0 // indirect
 	github.com/golang/snappy v0.0.2 // indirect
 	github.com/google/go-cmp v0.5.5 // indirect
 	github.com/hashicorp/go-uuid v1.0.2 // indirect
@@ -46,14 +41,12 @@ require (
 	github.com/mattn/go-sqlite3 v1.14.3 // indirect
 	github.com/pierrec/lz4 v2.6.0+incompatible // indirect
 	github.com/rcrowley/go-metrics v0.0.0-20200313005456-10cdbea86bc0 // indirect
-	github.com/thoas/go-funk v0.7.0 // indirect
-	github.com/tjfoc/gmsm v1.4.1 // indirect
+	github.com/stretchr/testify v1.7.0 // indirect
 	go.uber.org/atomic v1.6.0 // indirect
 	go.uber.org/multierr v1.5.0 // indirect
 	go.uber.org/zap v1.16.0 // indirect
 	golang.org/x/crypto v0.0.0-20210711020723-a769d52b0f97 // indirect
 	golang.org/x/net v0.0.0-20210428140749-89ef3d95e781 // indirect
-	golang.org/x/sync v0.0.0-20201020160332-67f06af15bc9 // indirect
 	golang.org/x/text v0.3.6 // indirect
 	golang.org/x/tools v0.0.0-20201224043029-2b0845dc783e // indirect
 	golang.org/x/xerrors v0.0.0-20200804184101-5ec99f83aff1 // indirect

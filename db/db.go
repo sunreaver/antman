@@ -3,8 +3,6 @@ package db
 import (
 	"time"
 
-	_ "gitee.com/opengauss/openGauss-connector-go-pq"
-	"github.com/cengsin/oracle"
 	"github.com/pkg/errors"
 	"gorm.io/driver/mysql"
 	"gorm.io/driver/postgres"
@@ -38,10 +36,6 @@ func makeClient(dbType string, master string, maxIdle, maxOpen int, logMode bool
 		dt = sqlite.Open
 	} else if dbType == "postgres" {
 		dt = postgres.Open
-	} else if dbType == "oracle" {
-		dt = oracle.Open
-	} else if dbType == "mogdb" {
-		dt = MogDBOpen
 	} else {
 		return nil, errors.Errorf("no support db type: %v", dbType)
 	}
