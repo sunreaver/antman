@@ -1,6 +1,6 @@
 package mq
 
-import "github.com/sunreaver/logger"
+import "github.com/sunreaver/logger/v3"
 
 type RecvUIntTopicFunc func(topic, key uint16, data []byte) error
 

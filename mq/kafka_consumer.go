@@ -7,9 +7,9 @@ import (
 	"strings"
 	"time"
 
-	"github.com/Shopify/sarama"
+	"github.com/IBM/sarama"
 	"github.com/pkg/errors"
-	"github.com/sunreaver/logger"
+	"github.com/sunreaver/logger/v3"
 )
 
 // MakeKafkaConsumer MakeKafkaConsumer
@@ -96,7 +96,7 @@ PROCESS_MSG:
 				err = consumer.stringFN(msg.Topic, string(msg.Key), msg.Value)
 			}
 			if err != nil {
-				consumer.log.Errorw("process",
+				consumer.log.Errorw()("process",
 					"topic", msg.Topic,
 					"key", string(msg.Key),
 					"mq_time", msg.Timestamp,
@@ -104,7 +104,7 @@ PROCESS_MSG:
 					"err", err,
 				)
 			} else {
-				consumer.log.Debugw("process",
+				consumer.log.Debugw()("process",
 					"topic", msg.Topic,
 					"key", string(msg.Key),
 					"mq_time", msg.Timestamp,
@@ -145,7 +145,7 @@ func (consumer *KafkaConsumer) startConsume() error {
 			consumer.ready = make(chan bool)
 
 			if err != nil {
-				consumer.log.Warnw("consume",
+				consumer.log.Warnw()("consume",
 					"err", err,
 				)
 				time.Sleep(10 * time.Second)
@@ -153,12 +153,12 @@ func (consumer *KafkaConsumer) startConsume() error {
 		}
 	}()
 	<-consumer.ready
-	consumer.log.Infow("start_sync_recv",
+	consumer.log.Infow()("start_sync_recv",
 		"cfg", consumer.cfg,
 	)
 	defer consumer.client.Close()
 	err := <-errChan
-	consumer.log.Infow("stop_sync_recv",
+	consumer.log.Infow()("stop_sync_recv",
 		"cfg", consumer.cfg,
 		"err", err,
 	)
@@ -167,7 +167,7 @@ func (consumer *KafkaConsumer) startConsume() error {
 
 // Stop Stop
 func (consumer *KafkaConsumer) Stop() {
-	consumer.log.Infow("stop_sync_recv", "cfg", consumer.cfg)
+	consumer.log.Infow()("stop_sync_recv", "cfg", consumer.cfg)
 	consumer.cancel()
 }
 

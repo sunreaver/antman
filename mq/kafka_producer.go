@@ -3,9 +3,9 @@ package mq
 import (
 	"fmt"
 
-	"github.com/Shopify/sarama"
+	"github.com/IBM/sarama"
 	"github.com/pkg/errors"
-	"github.com/sunreaver/logger"
+	"github.com/sunreaver/logger/v3"
 )
 
 var errServerDone = errors.New("server done")

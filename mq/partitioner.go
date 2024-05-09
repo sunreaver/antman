@@ -3,7 +3,7 @@ package mq
 import (
 	"hash/crc32"
 
-	"github.com/Shopify/sarama"
+	"github.com/IBM/sarama"
 )
 
 var random = sarama.NewRandomPartitioner("")
