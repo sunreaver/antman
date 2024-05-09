@@ -36,6 +36,8 @@ func makeClient(dbType string, master string, maxIdle, maxOpen int, logMode bool
 		dt = sqlite.Open
 	} else if dbType == "postgres" {
 		dt = postgres.Open
+	} else if dbType == "mogdb" {
+		dt = MogDBOpen
 	} else {
 		return nil, errors.Errorf("no support db type: %v", dbType)
 	}
