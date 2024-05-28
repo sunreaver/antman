@@ -25,7 +25,7 @@ func (md *MogDBDialector) Initialize(db *gorm.DB) error {
 		return err
 	}
 	callbacks.RegisterDefaultCallbacks(db, &callbacks.Config{
-		WithReturning: false,
+		WithReturning: true,
 	})
 	return nil
 }

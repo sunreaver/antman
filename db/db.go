@@ -4,6 +4,7 @@ import (
 	"time"
 
 	_ "gitee.com/opengauss/openGauss-connector-go-pq"
+	dm8 "github.com/Leefs/gorm-driver-dm"
 	"github.com/cengsin/oracle"
 	"github.com/pkg/errors"
 	"gorm.io/driver/mysql"
@@ -42,6 +43,8 @@ func makeClient(dbType string, master string, maxIdle, maxOpen int, logMode bool
 		dt = oracle.Open
 	} else if dbType == "mogdb" {
 		dt = MogDBOpen
+	} else if dbType == "dameng" { // 达梦
+		dt = dm8.Open
 	} else {
 		return nil, errors.Errorf("no support db type: %v", dbType)
 	}
