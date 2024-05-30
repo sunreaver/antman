@@ -1,4 +1,4 @@
-module github.com/sunreaver/antman/v3
+module github.com/sunreaver/antman/v4
 
 go 1.21
 

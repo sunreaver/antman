@@ -8,7 +8,7 @@ import (
 	"path"
 	"testing"
 
-	. "github.com/sunreaver/antman/v3/db"
+	. "github.com/sunreaver/antman/v4/db"
 	"gorm.io/gorm"
 	"gorm.io/gorm/schema"
 )
