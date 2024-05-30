@@ -3,6 +3,8 @@ package db
 import (
 	"time"
 
+	dm8 "github.com/godoes/gorm-dameng"
+	oracle "github.com/godoes/gorm-oracle"
 	"github.com/pkg/errors"
 	"gorm.io/driver/mysql"
 	"gorm.io/driver/postgres"
@@ -12,35 +14,54 @@ import (
 	"gorm.io/plugin/dbresolver"
 )
 
-// 创建DB.
-func MakeDB(c Config, gormConfig *gorm.Config) (db *Databases, err error) {
-	dbMaster, e := makeClient(c.Type, c.MasterURI, c.MaxIdleConns, c.MaxOpenConns, c.LogMode, gormConfig, c.SlaveURIs...)
-	if e != nil {
-		return nil, errors.Wrap(e, "make db")
-	}
-
-	db = &Databases{
-		master: dbMaster,
-	}
-
-	return db, nil
-}
-
 type dialector func(dsn string) gorm.Dialector
 
-func makeClient(dbType string, master string, maxIdle, maxOpen int, logMode bool, gormConfig *gorm.Config, slaves ...string) (*gorm.DB, error) {
+// 创建DB.
+func MakeDB(c Config, gormConfig *gorm.Config) (db *Databases, err error) {
 	var dt dialector
-	if dbType == "mysql" {
+	if c.Type == DBTypeMYSQL {
 		dt = mysql.Open
-	} else if dbType == "sqlite" {
+	} else if c.Type == DBTypeSQLite {
 		dt = sqlite.Open
-	} else if dbType == "postgres" {
+	} else if c.Type == DBTypePGSQL {
 		dt = postgres.Open
-	} else if dbType == "mogdb" {
+	} else if c.Type == DBTypeORACLE {
+		dt = oracle.Open
+	} else if c.Type == DBTypeMogDb {
 		dt = MogDBOpen
+	} else if c.Type == DBTypeDameng { // 达梦
+		dt = dm8.Open
 	} else {
-		return nil, errors.Errorf("no support db type: %v", dbType)
+		return nil, errors.Errorf("no support db type: %v", c.Type)
 	}
+	return makeClient(dt, c.MasterURI, c.MaxIdleConns, c.MaxOpenConns, c.LogMode, gormConfig, c.SlaveURIs...)
+}
+
+func MakeMysqlClient(c Config, gormConfig *gorm.Config) (db *Databases, err error) {
+	return makeClient(mysql.Open, c.MasterURI, c.MaxIdleConns, c.MaxOpenConns, c.LogMode, gormConfig, c.SlaveURIs...)
+}
+
+func MakeSqliteClient(c Config, gormConfig *gorm.Config) (db *Databases, err error) {
+	return makeClient(sqlite.Open, c.MasterURI, c.MaxIdleConns, c.MaxOpenConns, c.LogMode, gormConfig, c.SlaveURIs...)
+}
+
+func MakeOracleClient(c Config, gormConfig *gorm.Config) (db *Databases, err error) {
+	return makeClient(oracle.Open, c.MasterURI, c.MaxIdleConns, c.MaxOpenConns, c.LogMode, gormConfig, c.SlaveURIs...)
+}
+
+func MakePostgresqlClient(c Config, gormConfig *gorm.Config) (db *Databases, err error) {
+	return makeClient(postgres.Open, c.MasterURI, c.MaxIdleConns, c.MaxOpenConns, c.LogMode, gormConfig, c.SlaveURIs...)
+}
+
+func MakeMogdbClient(c Config, gormConfig *gorm.Config) (db *Databases, err error) {
+	return makeClient(MogDBOpen, c.MasterURI, c.MaxIdleConns, c.MaxOpenConns, c.LogMode, gormConfig, c.SlaveURIs...)
+}
+
+func MakeDamengClient(c Config, gormConfig *gorm.Config) (db *Databases, err error) {
+	return makeClient(dm8.Open, c.MasterURI, c.MaxIdleConns, c.MaxOpenConns, c.LogMode, gormConfig, c.SlaveURIs...)
+}
+
+func makeClient(dt dialector, master string, maxIdle, maxOpen int, logMode bool, gormConfig *gorm.Config, slaves ...string) (db *Databases, err error) {
 	var loggerMode logger.Interface
 	if logMode {
 		loggerMode = logger.Default.LogMode(logger.Info)
@@ -77,5 +98,9 @@ func makeClient(dbType string, master string, maxIdle, maxOpen int, logMode bool
 		return nil, errors.Wrap(e, "set dbresolver")
 	}
 
-	return tmp, nil
+	db = &Databases{
+		master: tmp,
+	}
+
+	return db, nil
 }
