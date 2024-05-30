@@ -1,6 +1,7 @@
 package db
 
 import (
+	_ "gitee.com/opengauss/openGauss-connector-go-pq"
 	"gorm.io/driver/postgres"
 	"gorm.io/gorm"
 )

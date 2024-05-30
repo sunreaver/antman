@@ -87,7 +87,7 @@ func TestMain(m *testing.M) {
 		MaxIdleConns: 1,
 		MaxOpenConns: 10,
 	}
-	tmp, e := MakeDB(cfg, nil)
+	tmp, e := MakeSqliteClient(cfg, nil)
 	if e != nil {
 		fmt.Println("make db err:", e)
 		os.Exit(1)
