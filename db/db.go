@@ -4,8 +4,8 @@ import (
 	"time"
 
 	_ "gitee.com/opengauss/openGauss-connector-go-pq"
-	"github.com/cengsin/oracle"
 	dm8 "github.com/godoes/gorm-dameng"
+	oracle "github.com/godoes/gorm-oracle"
 	"github.com/pkg/errors"
 	"gorm.io/driver/mysql"
 	"gorm.io/driver/postgres"
