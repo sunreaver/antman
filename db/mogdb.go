@@ -30,3 +30,7 @@ func (md *MogDBDialector) Initialize(db *gorm.DB) error {
 	// })
 	return nil
 }
+
+func MakeMogdbClient(c Config, gormConfig *gorm.Config) (db *Databases, err error) {
+	return makeClient(MogDBOpen, c.MasterURI, c.MaxIdleConns, c.MaxOpenConns, c.LogMode, gormConfig, c.SlaveURIs...)
+}
