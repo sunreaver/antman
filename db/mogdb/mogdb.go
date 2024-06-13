@@ -1,7 +1,8 @@
-package db
+package mogdb
 
 import (
 	_ "gitee.com/opengauss/openGauss-connector-go-pq"
+	"github.com/sunreaver/antman/v4/db"
 	"gorm.io/driver/postgres"
 	"gorm.io/gorm"
 )
@@ -31,6 +32,6 @@ func (md *MogDBDialector) Initialize(db *gorm.DB) error {
 	return nil
 }
 
-func MakeMogdbClient(c Config, gormConfig *gorm.Config) (db *Databases, err error) {
-	return makeClient(MogDBOpen, c.MasterURI, c.MaxIdleConns, c.MaxOpenConns, c.LogMode, gormConfig, c.SlaveURIs...)
+func MakeMogdbClient(c db.Config, gormConfig *gorm.Config) (*db.Databases, error) {
+	return db.MakeClient(MogDBOpen, c.MasterURI, c.MaxIdleConns, c.MaxOpenConns, c.LogMode, gormConfig, c.SlaveURIs...)
 }

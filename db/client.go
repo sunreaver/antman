@@ -9,7 +9,9 @@ import (
 	"gorm.io/plugin/dbresolver"
 )
 
-func makeClient(dt dialector, master string, maxIdle, maxOpen int, logMode bool, gormConfig *gorm.Config, slaves ...string) (db *Databases, err error) {
+type Dialector func(dsn string) gorm.Dialector
+
+func MakeClient(dt Dialector, master string, maxIdle, maxOpen int, logMode bool, gormConfig *gorm.Config, slaves ...string) (db *Databases, err error) {
 	var loggerMode logger.Interface
 	if logMode {
 		loggerMode = logger.Default.LogMode(logger.Info)
