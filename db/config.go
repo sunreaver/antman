@@ -31,6 +31,7 @@ const (
 	DBTypeMogDb     DBType = "mogdb"
 	DBTypeSQLite    DBType = "sqllite"
 	DBTypeDameng    DBType = "dameng"
+	DBTypeOBOracle  DBType = "ob_oracle"
 )
 
 /*
@@ -40,7 +41,7 @@ const (
 func GetDBTypeEnumFromStr(dbtypeStr string) DBType {
 	dbtypeEnum := DBType(strings.ToLower(dbtypeStr))
 	switch dbtypeEnum {
-	case DBTypeMYSQL, DBTypeORACLE, DBTypePGSQL, DBTypeSQLite, DBTypeMogDb:
+	case DBTypeMYSQL, DBTypeORACLE, DBTypePGSQL, DBTypeSQLite, DBTypeMogDb, DBTypeOBOracle:
 		return dbtypeEnum
 	}
 	return DBType(fmt.Sprintf("unknow:%v", dbtypeEnum))
@@ -81,7 +82,7 @@ func (t DBType) GetValEscapeFn() ValEscapeFn {
 			}
 			return value
 		}
-	case DBTypeORACLE, DBTypePGSQL, DBTypeMogDb:
+	case DBTypeORACLE, DBTypePGSQL, DBTypeMogDb, DBTypeOBOracle:
 		// abc'abc\n   ==>  'abc''abc\n' 或 abc''abc\n
 		return defaultValEscapeFn
 	default:
@@ -174,7 +175,7 @@ func (t DBType) GetValTimeFn() ValTimeFn {
 			}
 			return resultStr
 		}
-	case DBTypeORACLE:
+	case DBTypeORACLE, DBTypeOBOracle:
 		// DATE\TIMESTAMP 类型： 2006-01-02T15:04:05.999999999Z07:00   ==> TIMESTAMP '2022-11-01 14:25:34.968000 +01:00'
 		return func(fieldType, timeStr string, forDML bool) (resultStr string) {
 			fieldType = strings.ToUpper(fieldType)

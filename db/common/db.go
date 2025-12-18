@@ -27,6 +27,8 @@ func MakeDB(c db.Config, gormConfig *gorm.Config) (*db.Databases, error) {
 		dt = mogdb.MogDBOpen
 	} else if c.Type == db.DBTypeDameng { // 达梦
 		dt = dm8.Open
+	} else if c.Type == db.DBTypeOBOracle {
+		dt = oracle.Open
 	} else {
 		return nil, errors.Errorf("no support db type: %v", c.Type)
 	}

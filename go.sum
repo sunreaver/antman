@@ -29,6 +29,10 @@ github.com/fortytw2/leaktest v1.3.0 h1:u8491cBMTQ8ft8aeV+adlcytMZylmA5nnwwkRZjI8
 github.com/fortytw2/leaktest v1.3.0/go.mod h1:jDsjWgpAGjm2CA7WthBh/CdZYEPF31XHquHwclZch5g=
 github.com/fsnotify/fsnotify v1.4.9 h1:hsms1Qyu0jgnwNXIxa+/V/PDsU6CfLf6CNO8H7IWoS4=
 github.com/fsnotify/fsnotify v1.4.9/go.mod h1:znqG4EE+3YCdAaPaxE2ZRY/06pZUdp0tY4IgpuI1SZQ=
+github.com/ggicegg/go-oceanbase-oci8 v0.0.1 h1:Fsgs+tRLtTl3PEnwhuPLuDrt1QEpSwR0uj5OsE1DcBY=
+github.com/ggicegg/go-oceanbase-oci8 v0.0.1/go.mod h1:wjDx6Xm9q7dFtHJvIlrI99JytznLw5wQ4R+9mNXJwGI=
+github.com/ggicegg/gorm-oceanbase-oracle v0.0.4 h1:0dRSJVlAeqQFKs5QFjWb6yvxnfjyqfXjcQBYwaK9HG4=
+github.com/ggicegg/gorm-oceanbase-oracle v0.0.4/go.mod h1:XLaYQblkGTh8Oe8kmCb9guG316qDjrNp5NRTNIapmBw=
 github.com/go-redis/redis/v8 v8.11.5 h1:AcZZR7igkdvfVmQTPnu9WE37LRrO/YrBH5zWyjDC0oI=
 github.com/go-redis/redis/v8 v8.11.5/go.mod h1:gREzHqY1hg6oD9ngVRbLStwAWKhA0FEgq8Jd4h5lpwo=
 github.com/go-sql-driver/mysql v1.6.0/go.mod h1:DCzpHaOWr8IXmIStZouvnhqoel9Qv2LBy8hT2VhHyBg=
@@ -36,8 +40,6 @@ github.com/go-sql-driver/mysql v1.7.0 h1:ueSltNNllEqE3qcWBTD0iQd3IpL/6U+mJxLkazJ
 github.com/go-sql-driver/mysql v1.7.0/go.mod h1:OXbVy3sEdcQ2Doequ6Z5BW6fXNQTmx+9S1MCJN5yJMI=
 github.com/godoes/gorm-dameng v0.1.1 h1:qaktFiM8etz+3Irh9m1lR884a/pNzU/C/PJ6ZDjfBso=
 github.com/godoes/gorm-dameng v0.1.1/go.mod h1:D46MX6J+NK83oGpKjBEmwRRHWn4WtYTlC5zcnAusmE4=
-github.com/godoes/gorm-oracle v1.6.9 h1:PLpm3plCo0tG0fJxKaMUtwNiGu7YUsA1/NULUVUiJAo=
-github.com/godoes/gorm-oracle v1.6.9/go.mod h1:XLaYQblkGTh8Oe8kmCb9guG316qDjrNp5NRTNIapmBw=
 github.com/golang/glog v0.0.0-20160126235308-23def4e6c14b/go.mod h1:SBH7ygxi8pfUlaOkMMuAQtPIUF8ecWP5IEl/CR7VP2Q=
 github.com/golang/mock v1.1.1/go.mod h1:oTYuIxOrZwtPieC+H1uAHpcLFnEyAGVDL/k47Jfbm0A=
 github.com/golang/protobuf v1.2.0/go.mod h1:6lQm79b+lXiMfvg/cZm0SGofjICqVBUtrP5yJMmIC1U=
