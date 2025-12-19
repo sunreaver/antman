@@ -3,7 +3,7 @@ module github.com/sunreaver/antman/v4
 go 1.24.0
 
 replace (
-	github.com/godoes/gorm-oracle => github.com/ggicegg/gorm-oceanbase-oracle v0.0.4
+	github.com/godoes/gorm-oracle => github.com/ggicegg/gorm-oceanbase-oracle v0.0.5
 	github.com/mattn/go-oci8 => github.com/ggicegg/go-oceanbase-oci8 v0.0.1
 )
 
