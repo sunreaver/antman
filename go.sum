@@ -31,8 +31,8 @@ github.com/fsnotify/fsnotify v1.4.9 h1:hsms1Qyu0jgnwNXIxa+/V/PDsU6CfLf6CNO8H7IWo
 github.com/fsnotify/fsnotify v1.4.9/go.mod h1:znqG4EE+3YCdAaPaxE2ZRY/06pZUdp0tY4IgpuI1SZQ=
 github.com/ggicegg/go-oceanbase-oci8 v0.0.1 h1:Fsgs+tRLtTl3PEnwhuPLuDrt1QEpSwR0uj5OsE1DcBY=
 github.com/ggicegg/go-oceanbase-oci8 v0.0.1/go.mod h1:wjDx6Xm9q7dFtHJvIlrI99JytznLw5wQ4R+9mNXJwGI=
-github.com/ggicegg/gorm-oceanbase-oracle v0.0.4 h1:0dRSJVlAeqQFKs5QFjWb6yvxnfjyqfXjcQBYwaK9HG4=
-github.com/ggicegg/gorm-oceanbase-oracle v0.0.4/go.mod h1:XLaYQblkGTh8Oe8kmCb9guG316qDjrNp5NRTNIapmBw=
+github.com/ggicegg/gorm-oceanbase-oracle v0.0.5 h1:Km4gV6p7d01H0+3WMDon0aVtwV46dFjXPtTaEnuK99o=
+github.com/ggicegg/gorm-oceanbase-oracle v0.0.5/go.mod h1:XLaYQblkGTh8Oe8kmCb9guG316qDjrNp5NRTNIapmBw=
 github.com/go-redis/redis/v8 v8.11.5 h1:AcZZR7igkdvfVmQTPnu9WE37LRrO/YrBH5zWyjDC0oI=
 github.com/go-redis/redis/v8 v8.11.5/go.mod h1:gREzHqY1hg6oD9ngVRbLStwAWKhA0FEgq8Jd4h5lpwo=
 github.com/go-sql-driver/mysql v1.6.0/go.mod h1:DCzpHaOWr8IXmIStZouvnhqoel9Qv2LBy8hT2VhHyBg=
