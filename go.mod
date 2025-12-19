@@ -15,7 +15,7 @@ require (
 	github.com/go-redis/redis/v8 v8.11.5
 	github.com/godoes/gorm-dameng v0.1.1
 	github.com/godoes/gorm-oracle v1.6.9
-	github.com/mattn/go-oci8 v0.0.0-00010101000000-000000000000
+	github.com/mattn/go-oci8 v0.1.1
 	github.com/pkg/errors v0.9.1
 	github.com/sunreaver/logger/v3 v3.0.3
 	github.com/sunreaver/tomlanalysis v1.0.0
