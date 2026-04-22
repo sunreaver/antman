@@ -1,6 +1,6 @@
 module github.com/sunreaver/antman/v4
 
-go 1.24.0
+go 1.25.0
 
 replace (
 	github.com/godoes/gorm-oracle => github.com/ggicegg/gorm-oceanbase-oracle v0.0.5
@@ -39,8 +39,9 @@ require (
 	github.com/hashicorp/go-multierror v1.1.1 // indirect
 	github.com/hashicorp/go-uuid v1.0.3 // indirect
 	github.com/jackc/pgpassfile v1.0.0 // indirect
-	github.com/jackc/pgservicefile v0.0.0-20221227161230-091c0ba34f0a // indirect
-	github.com/jackc/pgx/v5 v5.4.3 // indirect
+	github.com/jackc/pgservicefile v0.0.0-20240606120523-5a60cdf6a761 // indirect
+	github.com/jackc/pgx/v5 v5.9.2 // indirect
+	github.com/jackc/puddle/v2 v2.2.2 // indirect
 	github.com/jcmturner/aescts/v2 v2.0.0 // indirect
 	github.com/jcmturner/dnsutils/v2 v2.0.0 // indirect
 	github.com/jcmturner/gofork v1.7.6 // indirect
@@ -55,6 +56,7 @@ require (
 	github.com/tjfoc/gmsm v1.4.1 // indirect
 	golang.org/x/crypto v0.45.0 // indirect
 	golang.org/x/net v0.47.0 // indirect
+	golang.org/x/sync v0.18.0 // indirect
 	golang.org/x/text v0.31.0 // indirect
 	golang.org/x/xerrors v0.0.0-20200804184101-5ec99f83aff1 // indirect
 	gopkg.in/natefinch/lumberjack.v2 v2.2.1 // indirect
